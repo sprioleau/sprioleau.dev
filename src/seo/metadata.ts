@@ -25,7 +25,7 @@ const baseOgConfig = {
   description,
   images: [
     {
-      url: "/images/sprioleau-social-card-2024-03.png",
+      url: "/images/sprioleau-social-card-2026-07.png",
       width: 1200,
       height: 628,
       alt: description,

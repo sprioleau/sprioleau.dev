@@ -77,5 +77,5 @@ Give a ⭐️ if you like this project!
 <!-- Project Details -->
 
 [deployed-url]: https://sprioleau.dev
-[social-card-url]: https://sprioleau.dev/images/sprioleau-social-card-2024-03.png "Social Card"
+[social-card-url]: https://sprioleau.dev/images/sprioleau-social-card-2026-07.png "Social Card"
 [homepage-screenshot-url]: https://sprioleau.dev/images/homepage.png "Homepage Screenshot"
