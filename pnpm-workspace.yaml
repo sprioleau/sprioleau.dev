@@ -1,3 +1,7 @@
+# Define the root folder as the project directory
+packages:
+  - '.'
+
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true
