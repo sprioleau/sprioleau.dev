@@ -34,7 +34,12 @@ const ClapButton = ({ serverClapCount, clientClapCount, setClientClapCount }: Pr
     const countAnimationProps = getCountAnimationProps();
     const fillAnimationProps = getFillAnimationProps(newClapCount / MAX_CLAP_COUNT);
 
-    animate([...fillAnimationProps, ...countAnimationProps]);
+    // Normalize both into guaranteed arrays
+    const fillArray = Array.isArray(fillAnimationProps) ? fillAnimationProps : [fillAnimationProps];
+    const countArray = Array.isArray(countAnimationProps) ? countAnimationProps : [countAnimationProps];
+
+    // Safely spread them together
+    animate([...fillArray, ...countArray]);
 
     setClientClapCount(newClapCount);
     debouncedHandleClaps();
@@ -51,7 +56,12 @@ const ClapButton = ({ serverClapCount, clientClapCount, setClientClapCount }: Pr
     const countAnimationProps = getCountAnimationProps();
     const fillAnimationProps = getFillAnimationProps(newClapCount / MAX_CLAP_COUNT);
 
-    animate([...fillAnimationProps, ...countAnimationProps]);
+    // Normalize both into guaranteed arrays
+    const fillArray = Array.isArray(fillAnimationProps) ? fillAnimationProps : [fillAnimationProps];
+    const countArray = Array.isArray(countAnimationProps) ? countAnimationProps : [countAnimationProps];
+
+    // Safely spread them together
+    animate([...fillArray, ...countArray]);
 
     setClientClapCount(newClapCount);
     debouncedHandleClaps();
@@ -100,7 +110,7 @@ const ClapButton = ({ serverClapCount, clientClapCount, setClientClapCount }: Pr
           <motion.button
             className="clap-button__button clap no-frame"
             onMouseDown={handleTouch}
-            onKeyDown={(e) => handleKeydown(e)}
+            onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => handleKeydown(e)}
             whileHover={{
               scale: 1.1,
               transition: { type: "spring", duration: 0.2 },

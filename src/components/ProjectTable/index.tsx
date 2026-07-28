@@ -22,9 +22,9 @@ const ProjectTable = ({ projects }: { projects: Project[] }) => {
     height: Math.floor(imageWidth * 0.5625),
   };
 
-  const projectTableRef = React.useRef(null);
+  const projectTableRef = React.useRef<HTMLElement>(null);
 
-  const { clientX, clientY } = useMouse(projectTableRef, {
+  const { clientX, clientY } = useMouse(projectTableRef as React.RefObject<HTMLElement>, {
     enterDelay: 50,
     leaveDelay: 200,
   });
@@ -41,7 +41,7 @@ const ProjectTable = ({ projects }: { projects: Project[] }) => {
             <th>Links</th>
           </tr>
         </thead>
-        <tbody ref={projectTableRef}>
+        <tbody ref={projectTableRef as React.RefObject<HTMLTableSectionElement>}>
           {projects.map((project) => (
             <ProjectRow
               key={project._id}

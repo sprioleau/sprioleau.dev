@@ -1,5 +1,5 @@
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import icons from "@/components/Icons";
+import { SanityImageSource } from "@sanity/image-url";
 
 export type BaseSchema = {
   _createdAt: string;
