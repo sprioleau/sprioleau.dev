@@ -1,3 +1,5 @@
+@use "mixins";
+
 body {
-  @include cursor-default;
+  @include mixins.cursor-default;
 }

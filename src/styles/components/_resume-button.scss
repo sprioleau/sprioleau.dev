@@ -1,3 +1,5 @@
+@use "../utils/mixins";
+
 .resume-button {
   &__button:not(.clap) {
     padding: 0.75em 1em;
@@ -12,7 +14,7 @@
     }
 
     .icon {
-      @include center;
+      @include mixins.center;
       padding: 0.25em;
     }
 

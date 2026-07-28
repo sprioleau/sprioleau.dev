@@ -1,3 +1,5 @@
+@use "../utils/mixins";
+
 .section-header {
   display: flex;
   align-items: center;
@@ -13,7 +15,7 @@
     flex-shrink: 0;
 
     &::before {
-      @include ff-mono;
+      @include mixins.ff-mono;
       counter-increment: section;
       content: "0" counter(section) ". ";
       font-size: 0.8em;
@@ -23,7 +25,7 @@
 
     &::after {
       --opacity: 0;
-      @include transition;
+      @include mixins.transition;
       content: "#";
       position: absolute;
       top: 55%;
@@ -35,7 +37,7 @@
       opacity: var(--opacity);
     }
 
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover::after,
       &:focus::after {
         --opacity: 1;
@@ -82,7 +84,7 @@
   }
 }
 
-@include md {
+@include mixins.md {
   .section-header {
     max-width: var(--p-max-width);
 
@@ -104,7 +106,7 @@
   }
 }
 
-@include md {
+@include mixins.md {
   .section-header {
     &__accent-line {
       display: none;

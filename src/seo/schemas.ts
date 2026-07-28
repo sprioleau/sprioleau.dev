@@ -14,7 +14,7 @@ export const websiteSchema = {
   "@type": "WebSite",
   name: "S. Prioleau",
   about:
-    "San'Quan Prioleau is a Senior Frontend Engineer with an eye for good design, who loves combining ideas to create new things.",
+    "San'Quan Prioleau is a Staff Software Engineer with an eye for good design, who loves combining ideas to create new things.",
   creator: {
     "@type": "Person",
     givenName: "San'Quan",
@@ -44,12 +44,12 @@ export const breadCrumbSchema = {
       name: "Work",
       item: "https://www.sprioleau.dev#work",
     },
-    {
-      "@type": "ListItem",
-      position: 4,
-      name: "Skills",
-      item: "https://www.sprioleau.dev#skills",
-    },
+    // {
+    //   "@type": "ListItem",
+    //   position: 4,
+    //   name: "Skills",
+    //   item: "https://www.sprioleau.dev#skills",
+    // },
     {
       "@type": "ListItem",
       position: 5,

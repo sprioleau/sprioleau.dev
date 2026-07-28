@@ -1,7 +1,9 @@
+@use "../utils/mixins";
+
 .skip-to-main-content {
   --translateX: calc(-100% - var(--section-x-padding) - 3rem);
-  @include transition;
-  @include center;
+  @include mixins.transition;
+  @include mixins.center;
   position: fixed;
   display: flex;
   top: var(--nav-height);

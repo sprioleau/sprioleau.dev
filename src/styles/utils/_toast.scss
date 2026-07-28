@@ -1,3 +1,5 @@
+@use "mixins";
+
 .Toastify {
   &__toast-theme--dark {
     background-color: var(--ui-bg-hover) !important;
@@ -6,7 +8,7 @@
   }
 
   &__toast-body {
-    @include ff-mono;
+    @include mixins.ff-mono;
   }
 
   &__close-button--dark {

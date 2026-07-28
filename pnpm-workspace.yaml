@@ -1,0 +1,8 @@
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@sanity/ui@3.5.0'
+  - '@types/node@26.1.2'

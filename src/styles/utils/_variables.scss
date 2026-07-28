@@ -1,5 +1,9 @@
+@use "sass:color";
+
 @function get-rgb($color) {
-  @return #{red($color)}, #{green($color)}, #{blue($color)};
+  // color.channel($color, "red", $space: rgb)
+  @return #{color.channel($color, "red", $space: rgb)}, #{color.channel($color, "green", $space: rgb)},
+    #{color.channel($color, "blue", $space: rgb)};
 }
 
 :root {
@@ -10,11 +14,11 @@
   --ui-bg-light: #{$ui-bg-light};
   --ui-bg-light-rgb: #{get-rgb($ui-bg-light)};
 
-  $ui-bg-hover: lighten(saturate($ui-bg, 10%), 10%);
+  $ui-bg-hover: color.adjust(color.adjust($ui-bg, $saturation: 10%, $space: hsl), $lightness: 10%, $space: hsl);
   --ui-bg-hover: #{$ui-bg-hover};
   --ui-bg-hover-rgb: #{get-rgb($ui-bg-hover)};
 
-  $ui-text: lighten(desaturate($ui-bg, 75%), 60%);
+  $ui-text: color.adjust(color.adjust($ui-bg, $saturation: -75%, $space: hsl), $lightness: 60%, $space: hsl);
   --ui-text: #{$ui-text};
   --ui-text-rgb: #{get-rgb($ui-text)};
 

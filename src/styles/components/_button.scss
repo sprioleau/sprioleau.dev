@@ -1,8 +1,10 @@
+@use "../utils/mixins";
+
 button,
 .button {
-  @include center;
-  @include ff-ss;
-  @include transition(all, 0.2s);
+  @include mixins.center;
+  @include mixins.ff-ss;
+  @include mixins.transition(all, 0.2s);
   position: relative;
   color: var(--ui-accent-1);
   border: none;
@@ -22,15 +24,15 @@ button,
 
   &:not(.clap) {
     padding: 1.25rem 2rem;
-    @include styled-border;
+    @include mixins.styled-border;
 
     &::after {
-      @include transition;
+      @include mixins.transition;
     }
 
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover {
-        @include cursor-pointer;
+        @include mixins.cursor-pointer;
         color: var(--ui-text-hover);
         background-color: rgba(var(--ui-accent-1-rgb), 0.2);
         transform: translate(-0.25rem, -0.25rem);
@@ -41,7 +43,7 @@ button,
       transform: translate(0.5rem, 0.5rem);
     }
 
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover::after {
         transform: translate(0.75rem, 0.75rem);
       }
@@ -72,7 +74,7 @@ button,
   }
 
   &.no-frame {
-    @include center;
+    @include mixins.center;
     border: 0;
     margin: 0;
     padding: 1rem;
@@ -82,7 +84,7 @@ button,
       display: none;
     }
 
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover,
       &:active {
         transform: none;
@@ -97,7 +99,7 @@ button,
   }
 }
 
-@include md {
+@include mixins.md {
   button,
   .button {
     &:not(.clap) {

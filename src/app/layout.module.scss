@@ -1,7 +1,7 @@
-@import "../styles/utils/mixins";
+@use "../styles/utils/mixins";
 
 .layout-background {
-  @include bg-obscure;
+  @include mixins.bg-obscure;
   background-image: radial-gradient(rgba(var(--ui-bg-light-rgb), 0) 1px, var(--ui-bg-light) 1px);
   position: fixed;
   top: 0;

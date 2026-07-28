@@ -1,10 +1,16 @@
+@use "../../styles/utils/mixins";
+
 @keyframes floating {
-  from {transform: translateY(-5px); }
-  to {transform: translateY(3px); }
+  from {
+    transform: translateY(-5px);
+  }
+  to {
+    transform: translateY(3px);
+  }
 }
 
 .action-indicator {
-  @include transition;
+  @include mixins.transition;
   color: var(--ui-accent-1);
 
   svg {

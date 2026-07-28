@@ -1,4 +1,4 @@
-@import "../../styles/utils/mixins";
+@use "../../styles/utils/mixins";
 
 .spotlight {
   position: absolute;
@@ -13,7 +13,7 @@
     opacity: 1;
   }
 
-  @include hover-wrapper {
+  @include mixins.hover-wrapper {
     &:hover {
       display: none;
     }

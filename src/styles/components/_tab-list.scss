@@ -1,3 +1,5 @@
+@use "../utils/mixins";
+
 .tab-list {
   --indicator-width: var(--accent-line-width);
 
@@ -6,9 +8,9 @@
     align-items: center;
     margin-bottom: 0.5rem;
 
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover {
-        @include cursor-pointer;
+        @include mixins.cursor-pointer;
       }
     }
 
@@ -22,7 +24,7 @@
   }
 
   &.expandable &__title {
-    @include cursor-pointer;
+    @include mixins.cursor-pointer;
   }
 
   &__main-content {
@@ -34,7 +36,9 @@
     width: 100%;
     opacity: var(--opacity);
     height: var(--height);
-    transition: height 0.01s ease-out, opacity 1s ease-out;
+    transition:
+      height 0.01s ease-out,
+      opacity 1s ease-out;
     transform-origin: top;
     overflow: hidden;
   }
@@ -58,7 +62,7 @@
   &__icon {
     --rotation: 0;
     display: inline-flex;
-    @include transition;
+    @include mixins.transition;
     transform: rotate(var(--rotation));
 
     svg {
@@ -79,7 +83,7 @@
   }
 
   &__label {
-    @include transition;
+    @include mixins.transition;
     padding: 1.25em 1.25em;
     font-size: 0.9em;
     white-space: nowrap;
@@ -97,9 +101,9 @@
       }
     }
 
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover {
-        @include cursor-pointer;
+        @include mixins.cursor-pointer;
         background-color: rgba(var(--ui-text-hover-rgb), 0.1);
         color: var(--ui-text-hover);
         padding-left: 2rem;
@@ -112,7 +116,7 @@
   }
 
   &__sublabel {
-    @include ff-mono;
+    @include mixins.ff-mono;
     display: flex;
     align-items: center;
     opacity: 0.8;
@@ -120,7 +124,7 @@
   }
 
   &__label-title {
-    @include ff-ss;
+    @include mixins.ff-ss;
     font-size: 0.9rem;
     margin-bottom: 0.25rem;
     text-overflow: ellipsis;
@@ -129,7 +133,7 @@
   }
 
   &__tabs-indicator {
-    @include transition;
+    @include mixins.transition;
     position: absolute;
     left: 0;
     top: 0;
@@ -179,7 +183,7 @@
   }
 
   &__dates {
-    @include ff-mono;
+    @include mixins.ff-mono;
 
     display: flex;
     align-items: center;
@@ -192,7 +196,7 @@
   }
 
   &__work-list-item {
-    @include transition;
+    @include mixins.transition;
     position: relative;
     padding-left: 1.75rem;
 
@@ -208,7 +212,7 @@
   }
 }
 
-@include md {
+@include mixins.md {
   .tab-list {
     --margin: -3rem;
     padding-left: 0.5em;
@@ -252,7 +256,7 @@
     }
 
     &__labels {
-      @include center;
+      @include mixins.center;
       border-left: none;
       border-bottom: var(--indicator-width) solid rgba(var(--ui-text-rgb), 0.25);
       flex-basis: calc(100% - 2 * var(--margin));
@@ -268,7 +272,7 @@
       padding: var(--padding);
       margin-top: var(--accent-line-width);
 
-      @include hover-wrapper {
+      @include mixins.hover-wrapper {
         &:hover {
           padding: var(--padding);
         }

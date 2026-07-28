@@ -1,5 +1,7 @@
+@use "../utils/mixins";
+
 .clap-button {
-  @include transition;
+  @include mixins.transition;
   transition-property: box-shadow;
   border-radius: 50%;
   margin: 1em 0.5em 2em;
@@ -14,13 +16,13 @@
 
   &__wrapper {
     --bg-offset: 0;
-    @include center;
+    @include mixins.center;
     overflow: visible;
     position: relative;
   }
 
   &__fill {
-    @include transition;
+    @include mixins.transition;
     position: absolute;
     left: 0;
     bottom: 0;
@@ -41,7 +43,7 @@
   }
 
   &__button {
-    @include transition;
+    @include mixins.transition;
     --size: 4em;
     width: var(--size);
     height: var(--size);
@@ -65,12 +67,12 @@
       transform: scale(1.05);
     }
 
-    @include hover-wrapper {
-      @include cursor-pointer;
+    @include mixins.hover-wrapper {
+      @include mixins.cursor-pointer;
     }
 
     svg {
-      @include center;
+      @include mixins.center;
       font-size: 1.75em;
       transform: translate(3%, 4%);
       color: var(--ui-accent-1);

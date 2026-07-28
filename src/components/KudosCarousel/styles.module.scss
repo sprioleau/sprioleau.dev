@@ -1,4 +1,4 @@
-@import "../../styles/utils/mixins.scss";
+@use "../../styles/utils/mixins.scss";
 
 .carousel {
   display: flex;
@@ -90,7 +90,7 @@
   }
 }
 
-@include mq(900px) {
+@include mixins.mq(900px) {
   .slides-buttons-wrapper {
     padding: 0;
 

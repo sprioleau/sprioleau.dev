@@ -8,10 +8,6 @@ module.exports = withBundleAnalyzer({
   experimental: {
     optimizePackageImports: ["react-icons"],
   },
-  i18n: {
-    locales: ["en-US"],
-    defaultLocale: "en-US",
-  },
   images: {
     remotePatterns: [
       {
@@ -20,5 +16,9 @@ module.exports = withBundleAnalyzer({
         port: "",
       },
     ],
+    qualities: [75, 100],
+  },
+  turbopack: {
+    root: process.cwd(),
   },
 });

@@ -1,8 +1,11 @@
+@use "mixins";
+
 .icon {
-  @include center;
+  @include mixins.center;
   padding: 0.5rem;
 
-  svg, path {
+  svg,
+  path {
     stroke: currentColor;
   }
 }

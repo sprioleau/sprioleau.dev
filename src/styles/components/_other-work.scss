@@ -1,6 +1,8 @@
+@use "../utils/mixins";
+
 .other-work {
   &__header-row {
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover {
         background-color: transparent;
       }
@@ -8,10 +10,10 @@
   }
 
   &__row {
-    @include transition;
+    @include mixins.transition;
     position: relative;
 
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover {
         background-color: rgba(var(--ui-accent-1-rgb), 0.1);
         color: var(--ui-text-hover);
@@ -20,7 +22,7 @@
   }
 
   &__image {
-    @include styled-border;
+    @include mixins.styled-border;
     position: fixed;
     transform: rotate(-10deg);
     z-index: 50;
@@ -71,7 +73,7 @@
       display: none;
     }
 
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover {
         color: var(--ui-accent-1);
         transform: translatey(-3px);

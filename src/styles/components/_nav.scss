@@ -1,5 +1,7 @@
+@use "../utils/mixins";
+
 .nav {
-  @include ff-mono;
+  @include mixins.ff-mono;
   background-image: linear-gradient(
     180deg,
     rgba(var(--ui-bg-light-rgb), 1) 0%,
@@ -25,15 +27,15 @@
   }
 
   &__logo {
-    @include center;
+    @include mixins.center;
     font-size: 2.5rem;
     position: relative;
   }
 
   &__logo a {
     --rotation: 0deg;
-    @include transition;
-    @include center;
+    @include mixins.transition;
+    @include mixins.center;
     width: var(--gutter-width);
     height: var(--gutter-width);
     border-radius: 50%;
@@ -50,16 +52,16 @@
       display: none;
     }
 
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover {
         --rotation: 45deg;
-        @include cursor-pointer;
+        @include mixins.cursor-pointer;
       }
     }
   }
 
   &__main-content {
-    @include center;
+    @include mixins.center;
   }
 
   &__links-wrapper {
@@ -81,8 +83,8 @@
   }
 
   &__link {
-    @include center;
-    @include cursor-pointer;
+    @include mixins.center;
+    @include mixins.cursor-pointer;
 
     &__link {
       padding: 0.5rem 0.25rem;
@@ -110,7 +112,7 @@
   }
 
   &__icon {
-    @include center;
+    @include mixins.center;
     color: var(--ui-accent-1);
     font-size: 1.5rem;
     display: block;
@@ -135,7 +137,7 @@
   }
 
   &__dismiss {
-    @include bg-obscure;
+    @include mixins.bg-obscure;
     position: fixed;
     display: none;
     top: 0;
@@ -147,7 +149,7 @@
   }
 }
 
-@include mq(1050px) {
+@include mixins.mq(1050px) {
   :root {
     --nav-height: 4rem;
   }
@@ -183,7 +185,7 @@
     }
 
     &__focus-trap {
-      @include center;
+      @include mixins.center;
       width: 100%;
       height: 100%;
     }
@@ -194,7 +196,7 @@
 
     &__links-wrapper {
       --translateX: 100%;
-      @include transition;
+      @include mixins.transition;
       transition-property: transform;
       position: fixed;
       opacity: 0;

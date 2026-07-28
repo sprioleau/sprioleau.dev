@@ -1,10 +1,12 @@
+@use "../utils/mixins";
+
 .experience {
   .container {
     align-items: unset;
   }
 }
 
-@include md {
+@include mixins.md {
   .experience {
     .section-header {
       align-self: center;

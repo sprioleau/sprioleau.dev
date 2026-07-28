@@ -1,3 +1,5 @@
+@use "mixins";
+
 *,
 *::before,
 *::after {
@@ -8,7 +10,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@include hover-wrapper {
+@include mixins.hover-wrapper {
   *:focus {
     border-color: var(--ui-accent-1);
     outline: none;
@@ -25,7 +27,7 @@
 html,
 body,
 #__next {
-  @include ff-body;
+  @include mixins.ff-body;
   width: 100vw;
   min-height: 100vh;
   min-height: 100dvh;
@@ -63,7 +65,7 @@ h3 {
 }
 
 p {
-  @include ff-ss;
+  @include mixins.ff-ss;
   max-width: var(--p-max-width);
   line-height: 1.8;
   font-size: 1rem;
@@ -81,7 +83,7 @@ li {
 
 a,
 .a {
-  @include transition;
+  @include mixins.transition;
   color: var(--ui-text);
   text-decoration: none;
   position: relative;
@@ -89,7 +91,7 @@ a,
 
   &::before,
   &::after {
-    @include transition(transform, 0.2s);
+    @include mixins.transition(transform, 0.2s);
     content: "";
     position: absolute;
   }
@@ -113,9 +115,9 @@ a,
     transform: scaleX(var(--scaleX));
   }
 
-  @include hover-wrapper {
+  @include mixins.hover-wrapper {
     &:hover {
-      @include cursor-pointer;
+      @include mixins.cursor-pointer;
       color: var(--ui-text-hover);
     }
 
@@ -134,7 +136,7 @@ a,
 }
 
 table {
-  @include ff-mono;
+  @include mixins.ff-mono;
   border-collapse: collapse;
   width: 100%;
 
@@ -155,7 +157,8 @@ em {
   margin-right: var(--accent-line-width);
   padding: 0.125em 0.25em;
   color: var(--ui-text-hover);
-  background: linear-gradient(
+  background:
+    linear-gradient(
       to bottom,
       var(--ui-accent-1) 0%,
       var(--ui-accent-1) calc(1em / 16),

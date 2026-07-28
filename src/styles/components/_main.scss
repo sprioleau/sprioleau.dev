@@ -1,3 +1,5 @@
+@use "../utils/mixins";
+
 .main {
   display: flex;
   flex-direction: column;
@@ -8,7 +10,7 @@
   margin-top: var(--nav-height);
   width: 100%;
 
-  @include mq(1050px) {
+  @include mixins.mq(1050px) {
     padding-left: var(--gutter-width);
   }
 }

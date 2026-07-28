@@ -1,11 +1,13 @@
+@use "../utils/mixins";
+
 .contact {
   &.section {
     padding-bottom: 0;
   }
 
   &__card {
-    @include cursor-copy;
-    @include center;
+    @include mixins.cursor-copy;
+    @include mixins.center;
     flex-direction: column;
     gap: 0.5rem;
     text-align: center;
@@ -24,7 +26,7 @@
       border: 0.1rem solid var(--ui-accent-1);
     }
 
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover {
         .contact__spotlight {
           opacity: 1;
@@ -50,7 +52,7 @@
     z-index: -1;
 
     &::before {
-      @include bg-obscure;
+      @include mixins.bg-obscure;
       content: "";
       position: absolute;
       inset: 0;
@@ -58,13 +60,13 @@
   }
 
   &__card-heading {
-    @include ff-mono;
+    @include mixins.ff-mono;
     user-select: none;
   }
 
   &__card-email {
     --scaleX: 100%;
-    @include ff-body;
+    @include mixins.ff-body;
     font-size: clamp(1rem, 0.6rem + 2vw, 1.5rem);
     line-height: 1.2;
 
@@ -80,9 +82,9 @@
       opacity: 1;
     }
 
-    @include hover-wrapper {
+    @include mixins.hover-wrapper {
       &:hover {
-        @include cursor-copy;
+        @include mixins.cursor-copy;
       }
     }
   }
@@ -94,7 +96,7 @@
   }
 }
 
-@include sm {
+@include mixins.sm {
   .contact {
     &__card {
       width: 100%;

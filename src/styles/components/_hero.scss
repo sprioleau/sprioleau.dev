@@ -1,3 +1,5 @@
+@use "../utils/mixins";
+
 .hero {
   --line-height: 1;
   min-height: calc(100vh - var(--nav-height));
@@ -18,7 +20,7 @@
     height: calc(1.1 * var(--h1));
   }
 
-  @include hover-wrapper {
+  @include mixins.hover-wrapper {
     &__headline-wrapper:hover &__headline,
     &__headline-wrapper:hover &__phonetic {
       transform: perspective(2000px) translateY(calc(-1.2 * var(--line-height) * var(--h1)));
@@ -26,13 +28,13 @@
   }
 
   &__phonetic {
-    @include transition;
+    @include mixins.transition;
     font-size: calc(var(--h1) * 0.775);
     color: var(--ui-text-hover);
   }
 
   &__headline {
-    @include transition;
+    @include mixins.transition;
     max-width: 25ch;
     color: var(--ui-text-hover);
     line-height: var(--line-height);
@@ -40,7 +42,7 @@
   }
 
   &__vocation {
-    @include ff-body-bold;
+    @include mixins.ff-body-bold;
   }
 
   &__vocation {
@@ -63,7 +65,7 @@
   }
 
   &__view-more {
-    @include cursor-pointer;
+    @include mixins.cursor-pointer;
     position: absolute;
     bottom: 3rem;
     right: 5rem;
@@ -76,7 +78,7 @@
   }
 }
 
-@include md {
+@include mixins.md {
   .hero {
     &__phonetic {
       display: none;
@@ -88,7 +90,7 @@
   }
 }
 
-@include sm {
+@include mixins.sm {
   .hero {
     &__view-more {
       display: none;
