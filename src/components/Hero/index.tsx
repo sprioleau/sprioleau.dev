@@ -26,12 +26,17 @@ export default async function Hero() {
             </span>
           </div>
           <h2 className="hero__vocation">{subHeading}</h2>
-          <p className="hero__brief">
-            <PortableTextBlock
-              childrenContent={brief[0].children}
-              markDefs={brief[0].markDefs}
-            />
-          </p>
+          {brief.map((block, index) => (
+            <p
+              key={index}
+              className="hero__brief"
+            >
+              <PortableTextBlock
+                childrenContent={block.children}
+                markDefs={block.markDefs}
+              />
+            </p>
+          ))}
         </header>
         <CallToActionButton
           className="hero__cta-button"
