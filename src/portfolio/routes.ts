@@ -6,32 +6,39 @@ export const portfolioOwner = {
   linkedInUrl: "https://www.linkedin.com/in/sanquanprioleau/",
 } as const;
 
-export const portfolioSections = [
-  {
-    slug: "about",
-    label: "About",
-    title: "My Story",
-    description: "Meet San'Quan Prioleau, an Atlanta-based software engineer with a background in visual design.",
-  },
-  {
-    slug: "experience",
-    label: "Experience",
-    title: "Experience",
-    description: "Explore San'Quan Prioleau's software engineering roles, work highlights, and career history.",
-  },
-  {
-    slug: "work",
-    label: "Work",
-    title: "Selected Work",
-    description: "Explore featured software projects by San'Quan Prioleau and the technologies behind them.",
-  },
-  {
-    slug: "contact",
-    label: "Contact",
-    title: "Get in Touch",
-    description: "Find San'Quan Prioleau's email address and links to his professional profiles.",
-  },
-] as const;
+export const aboutPage = {
+  slug: "about",
+  path: "/about",
+  label: "About",
+  title: "My Story",
+  description: "Meet San'Quan Prioleau, an Atlanta-based software engineer with a background in visual design.",
+} as const;
+
+export const experiencePage = {
+  slug: "experience",
+  path: "/experience",
+  label: "Experience",
+  title: "Experience",
+  description: "Explore San'Quan Prioleau's software engineering roles, work highlights, and career history.",
+} as const;
+
+export const workPage = {
+  slug: "work",
+  path: "/work",
+  label: "Work",
+  title: "Selected Work",
+  description: "Explore featured software projects by San'Quan Prioleau and the technologies behind them.",
+} as const;
+
+export const contactPage = {
+  slug: "contact",
+  path: "/contact",
+  label: "Contact",
+  title: "Get in Touch",
+  description: "Find San'Quan Prioleau's email address and links to his professional profiles.",
+} as const;
+
+export const portfolioSections = [aboutPage, experiencePage, workPage, contactPage] as const;
 
 export const homePage = {
   path: "/",
@@ -55,9 +62,4 @@ export const privacyPage = {
   description: "Learn how sprioleau.dev handles site analytics, claps, and contact information.",
 } as const;
 
-export const portfolioPages = [
-  homePage,
-  ...portfolioSections.map((section) => ({ ...section, path: `/${section.slug}` })),
-  projectsArchivePage,
-  privacyPage,
-];
+export const portfolioPages = [homePage, ...portfolioSections, projectsArchivePage, privacyPage];

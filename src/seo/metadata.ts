@@ -63,15 +63,16 @@ export function getPortfolioMetadata({
   description: string;
 }): Metadata {
   const pageTitle = path === "/" ? title : `${title} | ${fullName}`;
+  const url = new URL(path, SITE_URL).href;
 
   return {
     title: pageTitle,
     description,
-    alternates: { canonical: path },
+    alternates: { canonical: url },
     openGraph: {
       title: pageTitle,
       description,
-      url: path,
+      url,
       siteName: homePage.title,
       locale: "en_US",
       type: "website",

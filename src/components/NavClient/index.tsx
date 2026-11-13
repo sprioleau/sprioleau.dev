@@ -86,8 +86,8 @@ export default function NavClient({ navLinks }: Props) {
             >
               <ul className="nav__links">
                 {navLinks.map(({ _id, navLabel, sectionSlug }) => {
-                  const hasSectionPage = portfolioSections.some(({ slug }) => slug === sectionSlug);
-                  const href = hasSectionPage ? `/${sectionSlug}` : `/#${sectionSlug}`;
+                  const sectionPage = portfolioSections.find(({ slug }) => slug === sectionSlug);
+                  const href = sectionPage?.path ?? `/#${sectionSlug}`;
 
                   return (
                     <li

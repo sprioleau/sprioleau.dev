@@ -1,6 +1,22 @@
 @use "../utils/mixins";
 
 .contact {
+  &__details {
+    margin: 0 auto 2rem;
+    max-width: var(--p-max-width);
+  }
+
+  &__profiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    a {
+      align-content: center;
+      min-height: 24px;
+    }
+  }
+
   &.section {
     padding-bottom: 0;
   }

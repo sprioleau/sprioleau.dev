@@ -1,14 +1,36 @@
 import { portableTextToMarkdown } from "@portabletext/markdown";
 import { applyMarkdownHeaders } from "@vercel/agent-readability";
 import { client, queries, urlFor } from "@/libs/sanity";
-import type { AboutData, BodyContent, ContactData, Experience, FooterData, HeroData, LinksObject, Project, SiteDetails } from "@/schemas/types";
+import type {
+  AboutData,
+  BodyContent,
+  ContactData,
+  Experience,
+  FooterData,
+  HeroData,
+  LinksObject,
+  Project,
+  SiteDetails,
+} from "@/schemas/types";
 import formatIsoDate from "@/utils/formatIsoDate";
+import { contactParagraphs } from "./contact";
 import { markdownPath } from "./markdown-path";
 import { privacyIntro, privacySections } from "./privacy";
-import { homePage, portfolioOwner, portfolioPages, portfolioSections, privacyPage, projectsArchivePage, SITE_URL } from "./routes";
+import {
+  homePage,
+  portfolioOwner,
+  portfolioPages,
+  portfolioSections,
+  privacyPage,
+  projectsArchivePage,
+  SITE_URL,
+} from "./routes";
 
 function document(...blocks: (string | undefined)[]) {
-  return `${blocks.map((block) => block?.trim()).filter(Boolean).join("\n\n")}\n`;
+  return `${blocks
+    .map((block) => block?.trim())
+    .filter(Boolean)
+    .join("\n\n")}\n`;
 }
 
 function richText(blocks: BodyContent[] = []) {
@@ -37,15 +59,17 @@ async function renderAbout() {
 
 async function renderExperience(headingPrefix: string) {
   const experience = await client.fetch<Experience[]>(queries.experience);
-  return document(...experience.map(({ jobTitle, employer, fromDate, toDate, currentlyInRole, workHighlights }) => {
-    const employerName = employer?.webAddress ? link(employer.name, employer.webAddress) : employer?.name;
-    const dates = [formatIsoDate(fromDate), toDate ? formatIsoDate(toDate) : currentlyInRole ? "Present" : null];
-    return document(
-      `${headingPrefix} ${[jobTitle, employerName].filter(Boolean).join(" at ")}`,
-      dates.filter(Boolean).join(" – "),
-      richText(workHighlights),
-    );
-  }));
+  return document(
+    ...experience.map(({ jobTitle, employer, fromDate, toDate, currentlyInRole, workHighlights }) => {
+      const employerName = employer?.webAddress ? link(employer.name, employer.webAddress) : employer?.name;
+      const dates = [formatIsoDate(fromDate), toDate ? formatIsoDate(toDate) : currentlyInRole ? "Present" : null];
+      return document(
+        `${headingPrefix} ${[jobTitle, employerName].filter(Boolean).join(" at ")}`,
+        dates.filter(Boolean).join(" – "),
+        richText(workHighlights)
+      );
+    })
+  );
 }
 
 const projectLinkLabels: Record<keyof LinksObject, string> = {
@@ -65,41 +89,67 @@ function projectLinks(links: LinksObject | undefined) {
 
 async function renderWork(headingPrefix: string) {
   const projects = await client.fetch<Project[]>(queries.featuredProjects);
-  return document(...projects.map(({ title, description, tags, links }) => document(
-    `${headingPrefix} ${title}`,
-    richText(description),
-    tags?.map(({ name }) => name).join(", "),
-    projectLinks(links),
-  )), link(projectsArchivePage.label, projectsArchivePage.path));
+  return document(
+    ...projects.map(({ title, description, tags, links, mainImage }) =>
+      document(
+        `${headingPrefix} ${title}`,
+        richText(description),
+        mainImage
+          ? `![${title} preview](<${urlFor(mainImage).width(800).height(450).format("webp").url()}>)`
+          : undefined,
+        tags?.map(({ name }) => name).join(", "),
+        projectLinks(links)
+      )
+    ),
+    link(projectsArchivePage.label, projectsArchivePage.path)
+  );
 }
 
-async function renderContact() {
-  const [{ email, overline }, { creator }] = await Promise.all([
+async function renderContact(headingPrefix: string) {
+  const [{ email, overline }, { creator, meta }] = await Promise.all([
     client.fetch<ContactData>(queries.contact),
     client.fetch<SiteDetails>(queries.siteDetails),
   ]);
-  return document(overline, link(email, `mailto:${email}`), [
-    link("GitHub", creator.links.gitHubUrl),
-    link("LinkedIn", creator.links.linkedInUrl || portfolioOwner.linkedInUrl),
-  ].join(" · "));
+  return document(
+    ...(headingPrefix === "##" ? contactParagraphs : []),
+    overline,
+    link(email, `mailto:${email}`),
+    [
+      link("GitHub", creator.links.gitHubUrl),
+      link("LinkedIn", portfolioOwner.linkedInUrl),
+      meta.vsCodeUrl ? link("VS Code Marketplace", meta.vsCodeUrl) : undefined,
+    ]
+      .filter(Boolean)
+      .join(" · ")
+  );
 }
 
 async function renderArchive(headingPrefix: string) {
   const projects = await client.fetch<Project[]>(queries.allProjects);
-  return document(...projects.map(({ title, yearBuilt, builtFor, builtWith, links }) => document(
-    `${headingPrefix} ${title}`,
-    [formatIsoDate(yearBuilt, "YYYY"), builtFor?.name, builtWith?.map(({ name }) => name).join(", ")]
-      .filter(Boolean).join(" · "),
-    projectLinks(links),
-  )));
+  return document(
+    ...projects.map(({ title, yearBuilt, builtFor, builtWith, links }) =>
+      document(
+        `${headingPrefix} ${title}`,
+        [formatIsoDate(yearBuilt, "YYYY"), builtFor?.name, builtWith?.map(({ name }) => name).join(", ")]
+          .filter(Boolean)
+          .join(" · "),
+        projectLinks(links)
+      )
+    )
+  );
 }
 
 function renderPrivacy(headingPrefix: string) {
-  return document(privacyIntro, ...privacySections.map(({ heading, paragraphs, links }) => document(
-    `${headingPrefix} ${heading}`,
-    ...paragraphs,
-    links?.map(({ label, href }) => `- ${link(label, href)}`).join("\n"),
-  )));
+  return document(
+    privacyIntro,
+    ...privacySections.map(({ heading, paragraphs, links }) =>
+      document(
+        `${headingPrefix} ${heading}`,
+        ...paragraphs,
+        links?.map(({ label, href }) => `- ${link(label, href)}`).join("\n")
+      )
+    )
+  );
 }
 
 const renderSections = {
@@ -112,7 +162,9 @@ const renderSections = {
 async function renderHome() {
   const [hero, sections, footer] = await Promise.all([
     renderHero(),
-    Promise.all(portfolioSections.map(async ({ slug, title }) => document(`## ${title}`, await renderSections[slug]("###")))),
+    Promise.all(
+      portfolioSections.map(async ({ slug, title }) => document(`## ${title}`, await renderSections[slug]("###")))
+    ),
     client.fetch<FooterData>(queries.footer),
   ]);
   return document(hero, ...sections, richText(footer.body), link(privacyPage.label, privacyPage.path));
@@ -134,9 +186,11 @@ export function renderLlmsIndex() {
     "## When to use this site",
     "Use this portfolio to learn about San'Quan’s background, software engineering experience, projects, and professional contact information. Follow a Markdown link for a specific topic or read the complete portfolio in one file.",
     "## Portfolio",
-    portfolioPages.map(({ path, label, description }) => `- ${link(label, markdownPath(path))}: ${description}`).join("\n"),
+    portfolioPages
+      .map(({ path, label, description }) => `- ${link(label, markdownPath(path))}: ${description}`)
+      .join("\n"),
     "## Optional",
-    `- ${link("Complete portfolio", "/llms-full.txt")}: Use for a single-file copy of the homepage, project archive, and privacy policy.`,
+    `- ${link("Complete portfolio", "/llms-full.txt")}: Use for a single-file copy of the homepage, project archive, and privacy policy.`
   );
 }
 
