@@ -18,11 +18,19 @@
     color: var(--ui-text-hover);
     position: relative;
 
+    &::before {
+      display: none;
+    }
+
     &::after {
       content: "";
       display: block;
       position: absolute;
       inset: 1rem;
+      width: auto;
+      height: auto;
+      background: none;
+      pointer-events: none;
       border: 0.1rem solid var(--ui-accent-1);
     }
 
@@ -62,6 +70,7 @@
   &__card-heading {
     @include mixins.ff-mono;
     user-select: none;
+    font-size: var(--h3);
   }
 
   &__card-email {

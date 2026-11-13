@@ -23,12 +23,11 @@ export default async function About() {
       </div>
       <Image
         className="about__image"
-        src={urlFor(mainImage).format("webp").width(350).height(350).url()}
+        src={urlFor(mainImage).width(400).height(400).auto("format").url()}
         alt="San'Quan Prioleau headshot"
         width={350}
         height={350}
-        quality={100}
-        priority
+        sizes="(max-width: 450px) 75vw, 350px"
       />
     </>
   );

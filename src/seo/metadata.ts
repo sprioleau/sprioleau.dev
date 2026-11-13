@@ -1,10 +1,8 @@
-import { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 
-const fullName = "San'Quan Prioleau";
-const title = `${fullName} - Staff Software Engineer`;
-const description = `Personal website of ${fullName}`;
-const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-const baseUrl = `${protocol}://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+import { homePage, portfolioOwner, SITE_URL } from "@/portfolio/routes";
+
+const fullName = portfolioOwner.name;
 const keywords = [
   fullName,
   "Portfolio",
@@ -20,20 +18,14 @@ const keywords = [
   "Atlanta",
 ];
 
-const baseOgConfig = {
-  title,
-  description,
-  images: [
-    {
-      url: "/images/sprioleau-social-card-2026-07.png",
-      width: 1200,
-      height: 628,
-      alt: description,
-    },
-  ],
-};
-
-const metadataBase = new URL(baseUrl);
+const socialImages = [
+  {
+    url: "/images/sprioleau-social-card-2026-07.png",
+    width: 1200,
+    height: 628,
+    alt: fullName,
+  },
+];
 
 export const homepageViewport: Viewport = {
   initialScale: 1,
@@ -42,9 +34,8 @@ export const homepageViewport: Viewport = {
   colorScheme: "dark",
 };
 
-export const homepageMetadata: Metadata = {
-  title,
-  description,
+export const siteMetadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   applicationName: "sprioleau.dev",
   generator: "Next.js",
   referrer: "origin-when-cross-origin",
@@ -53,20 +44,44 @@ export const homepageMetadata: Metadata = {
   },
   manifest: "/manifest.json",
   keywords,
-  authors: [{ name: fullName, url: baseUrl }],
+  authors: [{ name: fullName, url: SITE_URL }],
   creator: fullName,
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase,
-  openGraph: {
-    ...baseOgConfig,
-    url: baseUrl,
-    siteName: title,
-    locale: "en-US",
-    type: "website",
-  },
-  twitter: baseOgConfig,
 };
+
+export function getPortfolioMetadata({
+  path,
+  title,
+  description,
+}: {
+  path: string;
+  title: string;
+  description: string;
+}): Metadata {
+  const pageTitle = path === "/" ? title : `${title} | ${fullName}`;
+
+  return {
+    title: pageTitle,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      title: pageTitle,
+      description,
+      url: path,
+      siteName: homePage.title,
+      locale: "en_US",
+      type: "website",
+      images: socialImages,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageTitle,
+      description,
+      images: socialImages,
+    },
+  };
+}

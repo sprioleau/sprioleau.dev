@@ -1,39 +1,62 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import FocusTrap from "focus-trap-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Logo from "../Logo";
-import { NavLink } from "@/schemas/types";
+import { portfolioSections } from "@/portfolio/routes";
+import type { NavLink } from "@/schemas/types";
 import icons from "../Icons";
-import { composeClasses, scrollToTop } from "@/utils";
+import composeClasses from "@/utils/composeClasses";
 
 type Props = {
   navLinks: NavLink[];
 };
 
-const NavClient = ({ navLinks }: Props) => {
+export default function NavClient({ navLinks }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
-
-  const close = useCallback(() => {
-    document.body.style.overflow = "scroll";
-    setIsExpanded(false);
-  }, [setIsExpanded]);
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
 
   function open() {
     setIsExpanded(true);
-    document.body.style.overflow = "hidden";
+  }
+
+  function close() {
+    setIsExpanded(false);
   }
 
   useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key !== "Escape") return;
-      close();
-    }
+    if (!isExpanded) return;
 
-    if (isExpanded) document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isExpanded, close]);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isExpanded]);
+
+  function handleSectionClick(event: MouseEvent<HTMLAnchorElement>, slug: string) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    close();
+    if (!isHomePage || !document.getElementById(slug)) return;
+
+    event.preventDefault();
+    window.location.assign(`#${slug}`);
+  }
+
+  function handleLogoClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    close();
+    if (!isHomePage) return;
+
+    event.preventDefault();
+    if (window.location.hash) window.history.pushState(null, "", pathname);
+    window.scrollTo(0, 0);
+  }
 
   return (
     <nav
@@ -44,73 +67,78 @@ const NavClient = ({ navLinks }: Props) => {
         <Link
           href="/"
           className="nav__logo-link"
-          aria-label="S. Prioleau Logo"
-          tabIndex={0}
-          role="button"
-          onClick={scrollToTop}
+          aria-label="Homepage"
+          prefetch={false}
+          onClick={handleLogoClick}
         >
           <Logo />
         </Link>
       </div>
       <div className="nav__main-content">
-        <FocusTrap active={isExpanded}>
+        <FocusTrap
+          active={isExpanded}
+          focusTrapOptions={{ onDeactivate: close, allowOutsideClick: true }}
+        >
           <div className="nav__focus-trap">
-            <div className="nav__links-wrapper">
+            <div
+              className="nav__links-wrapper"
+              id="site-navigation"
+            >
               <ul className="nav__links">
-                {navLinks.map(({ _id, navLabel, sectionSlug }) => (
-                  <li
-                    className="nav__link"
-                    key={_id}
-                  >
-                    <a
-                      data-key={_id}
+                {navLinks.map(({ _id, navLabel, sectionSlug }) => {
+                  const hasSectionPage = portfolioSections.some(({ slug }) => slug === sectionSlug);
+                  const href = hasSectionPage ? `/${sectionSlug}` : `/#${sectionSlug}`;
+
+                  return (
+                    <li
+                      className="nav__link"
                       key={_id}
-                      href={`/#${sectionSlug}`}
-                      className="nav__link__link shadow-link"
-                      data-title={navLabel}
-                      onClick={close}
                     >
-                      {navLabel}
-                    </a>
-                  </li>
-                ))}
+                      <Link
+                        href={href}
+                        prefetch={false}
+                        aria-current={pathname === href ? "page" : undefined}
+                        className="nav__link__link shadow-link"
+                        data-title={navLabel}
+                        onClick={(event) => handleSectionClick(event, sectionSlug)}
+                      >
+                        {navLabel}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
-              {/* <ResumeButton /> */}
               {isExpanded && (
                 <button
                   id="close"
                   className="nav__icon nav__icon--close no-frame"
                   type="button"
+                  aria-label="Close menu"
                   onClick={close}
                 >
                   {icons.close}
                 </button>
               )}
             </div>
-            {!isExpanded && (
-              <button
-                id="open"
-                className="nav__icon nav__icon--menu no-frame"
-                type="button"
-                tabIndex={0}
-                onClick={open}
-                aria-label="open menu"
-              >
-                {icons.menu}
-              </button>
-            )}
+            <button
+              id="open"
+              className="nav__icon nav__icon--menu no-frame"
+              type="button"
+              onClick={open}
+              aria-label="Open menu"
+              aria-expanded={isExpanded}
+              aria-controls="site-navigation"
+            >
+              {icons.menu}
+            </button>
             <div
               className="nav__dismiss"
               onClick={close}
-              role="button"
-              tabIndex={-1}
-              aria-label="close menu"
+              aria-hidden="true"
             />
           </div>
         </FocusTrap>
       </div>
     </nav>
   );
-};
-
-export default NavClient;
+}

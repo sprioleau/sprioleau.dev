@@ -1,36 +1,20 @@
-import {
-  About,
-  Contact,
-  Experience,
-  Hero,
-  PageSectionLayout,
-  // Skills,
-  Work,
-} from "@/components";
+import Hero from "@/components/Hero";
+import PortfolioSection from "@/portfolio/PortfolioSection";
+import { homePage, portfolioSections } from "@/portfolio/routes";
+import { getPortfolioMetadata } from "@/seo";
 
 export const dynamic = "force-dynamic";
-
-// prettier-ignore
-const pageSections = [
-  { id: "about"     , title: "My Story"       , component: About      },
-  { id: "experience", title: "Experience"     , component: Experience },
-  { id: "work"      , title: "Selected Work"  , component: Work       },
-  // { id: "skills"    , title: "Relevant Skills", component: Skills     },
-  { id: "contact"   , title: "Get in Touch"   , component: Contact    },
-];
+export const metadata = getPortfolioMetadata(homePage);
 
 export default function HomePage() {
   return (
     <>
       <Hero />
-      {pageSections.map(({ id, title, component: Component }) => (
-        <PageSectionLayout
-          key={id}
-          sectionId={id}
-          sectionTitle={title}
-        >
-          <Component />
-        </PageSectionLayout>
+      {portfolioSections.map((section) => (
+        <PortfolioSection
+          key={section.slug}
+          section={section}
+        />
       ))}
     </>
   );

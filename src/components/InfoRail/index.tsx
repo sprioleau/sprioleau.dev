@@ -27,7 +27,7 @@ export default async function InfoRail() {
           </li>
           <li className="info-rail__link-list-item">
             <a
-              aria-label="link"
+              aria-label="GitHub profile"
               href={gitHubUrl}
               rel="noreferrer"
               className="info-rail__link shadow-link"
@@ -38,7 +38,7 @@ export default async function InfoRail() {
           </li>
           <li className="info-rail__link-list-item">
             <a
-              aria-label="link"
+              aria-label="Visual Studio Code Marketplace profile"
               href={vsCodeUrl}
               rel="noreferrer"
               className="info-rail__link shadow-link"
@@ -49,7 +49,7 @@ export default async function InfoRail() {
           </li>
           <li className="info-rail__link-list-item">
             <a
-              aria-label="link"
+              aria-label="LinkedIn profile"
               href="https://www.linkedin.com/in/sanquanprioleau/"
               rel="noreferrer"
               className="info-rail__link shadow-link"

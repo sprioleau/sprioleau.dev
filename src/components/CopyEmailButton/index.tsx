@@ -1,23 +1,20 @@
 "use client";
 
-import { handleCopyEmailToClipboard } from "@/utils";
+import handleCopyEmailToClipboard from "@/utils/handleCopyEmailToClipboard";
 
 type Props = {
   email: string;
   className: string;
 };
 
-const CopyEmailButton = ({ email, className }: Props) => {
+export default function CopyEmailButton({ email, className }: Props) {
   return (
-    <span
+    <a
       className={className}
-      role="button"
-      tabIndex={0}
-      onClick={() => handleCopyEmailToClipboard(email)}
+      href={`mailto:${email}`}
+      onClick={(event) => handleCopyEmailToClipboard(event, email)}
     >
       {email}
-    </span>
+    </a>
   );
-};
-
-export default CopyEmailButton;
+}

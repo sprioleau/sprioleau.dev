@@ -1,25 +1,29 @@
-import { FooterContent } from "@/components";
-import { ContributionsData, fetchContributions } from "@/libs/github";
+import { fetchContributions } from "@/libs/github";
 import { client, queries } from "@/libs/sanity";
-import { FooterData } from "@/schemas/types";
-import { getClaps } from "@/utils";
+import { type FooterData } from "@/schemas/types";
+import getClaps from "@/utils/getClaps";
+import Link from "next/link";
+import FooterContent from "../FooterContent";
+import PortableTextBlock from "../PortableTextBlock";
 
 export default async function Footer() {
-  const footerContent = await client.fetch<FooterData>(queries.footer);
-  const { contributions } = (await fetchContributions()) as ContributionsData;
-  const { data: claps } = await getClaps();
-  const serverClapCount = claps ?? 0;
-
-  const { body } = footerContent;
+  const [footerContent, { contributions }, { data: claps }] = await Promise.all([
+    client.fetch<FooterData>(queries.footer),
+    fetchContributions(),
+    getClaps(),
+  ]);
 
   return (
     <footer className="footer">
       <div className="container">
-        <FooterContent
-          content={body}
-          contributions={contributions}
-          serverClapCount={serverClapCount}
-        />
+        <FooterContent contributions={contributions} serverClapCount={claps ?? 0}>
+          {footerContent.body.map(({ _key, children, markDefs }) => (
+            <p key={_key} className="footer__message">
+              <PortableTextBlock childrenContent={children} markDefs={markDefs} linksClass="shadow-link" />
+            </p>
+          ))}
+        </FooterContent>
+        <p className="footer__privacy"><Link href="/privacy" className="shadow-link">Privacy</Link></p>
       </div>
     </footer>
   );

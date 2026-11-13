@@ -30,6 +30,7 @@
     height: 100%;
     transform: scaleY(0);
     transform-origin: bottom;
+    margin: 0;
     background-color: rgba(var(--ui-accent-1-rgb), 0.2);
   }
 
@@ -40,6 +41,15 @@
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
+  }
+
+  &__status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   &__button {
@@ -69,6 +79,17 @@
 
     @include mixins.hover-wrapper {
       @include mixins.cursor-pointer;
+
+      &.no-frame:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &.no-frame:hover,
+      &:active {
+        transform: none;
+      }
     }
 
     svg {

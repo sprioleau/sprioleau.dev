@@ -9,10 +9,15 @@
 
   &__title {
     color: var(--ui-text-hover);
+    font-size: var(--h2);
     font-weight: var(--font-weight-regular);
     padding-right: 1.5rem;
     position: relative;
     flex-shrink: 0;
+
+    &:is(h1)::before {
+      content: none;
+    }
 
     &::before {
       @include mixins.ff-mono;

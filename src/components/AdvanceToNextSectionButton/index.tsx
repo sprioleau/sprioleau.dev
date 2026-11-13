@@ -5,13 +5,14 @@ type Props = {
   className: string;
 };
 
-const AdvanceToNextSectionButton = ({
+export default function AdvanceToNextSectionButton({
   advanceToSectionSlug,
   className,
-}: Props) => {
+}: Props) {
   return (
     <a
       className={className}
+      aria-label={`Scroll to ${advanceToSectionSlug}`}
       href={`/#${advanceToSectionSlug}`}
     >
       <ActionIndicator
@@ -20,6 +21,4 @@ const AdvanceToNextSectionButton = ({
       />
     </a>
   );
-};
-
-export default AdvanceToNextSectionButton;
+}

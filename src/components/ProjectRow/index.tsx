@@ -1,106 +1,45 @@
 import { urlFor } from "@/libs/sanity";
 import type { LinksObject, Project } from "@/schemas/types";
-import Image from "next/image";
-import React from "react";
-import { formatIsoDate } from "../../utils";
-import sortAlphaByKey from "../../utils/sortAlphaByKey";
+import formatIsoDate from "@/utils/formatIsoDate";
+import sortAlphaByKey from "@/utils/sortAlphaByKey";
 import icons from "../Icons";
 
-type Props = {
-  project: Project;
-  smallerThanSmall: boolean;
-  smallerThanMedium: boolean;
-  setCurrentImage: React.Dispatch<React.SetStateAction<Project["mainImage"] | undefined>>;
-};
+const projectLinks = [
+  { key: "gitHubUrl", label: "GitHub", icon: icons.gitHub },
+  { key: "vsCodeUrl", label: "VS Code Marketplace", icon: icons.code },
+  { key: "figmaUrl", label: "Figma", icon: icons.figma },
+  { key: "deployedUrl", label: "Live site", icon: icons.externalLink },
+] satisfies { key: keyof LinksObject; label: string; icon: React.ReactNode }[];
 
-const iconsMap: Record<keyof LinksObject, React.ReactNode> = {
-  gitHubUrl: icons.gitHub,
-  vsCodeUrl: icons.code,
-  figmaUrl: icons.figma,
-  deployedUrl: icons.externalLink,
-};
-
-export default function ProjectRow({ project, smallerThanSmall, smallerThanMedium, setCurrentImage }: Props) {
+export default function ProjectRow({ project }: { project: Project }) {
   const { yearBuilt, title, builtFor, builtWith, links, mainImage } = project;
-
-  const imageWidth = 325;
-
-  const imageDimensions = {
-    width: imageWidth,
-    height: Math.floor(imageWidth * 0.5625),
-  };
-
-  const handleMouseEnter = () => {
-    if (smallerThanSmall) return;
-    setCurrentImage(mainImage);
-  };
-
-  const handleMouseLeave = () => {
-    setCurrentImage(undefined);
-  };
+  const previewImage = mainImage ? urlFor(mainImage).width(650).height(364).auto("format").url() : undefined;
+  const technologies = builtWith?.toSorted((a, b) => sortAlphaByKey(a, b, "name"));
 
   return (
-    <tr
-      className="other-work__row"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {!smallerThanSmall && <td className="other-work__year">{formatIsoDate(yearBuilt, "YYYY")}</td>}
+    <tr className="other-work__row" data-preview-image={previewImage}>
+      <td className="other-work__year other-work__hide-small">{formatIsoDate(yearBuilt, "YYYY")}</td>
       <td>{title}</td>
-      {!smallerThanMedium && <td>{builtFor ? builtFor.name : <span>&mdash;</span>}</td>}
-      {!smallerThanSmall && (
-        <td>
-          {builtWith
-            .sort((a, b) => sortAlphaByKey(a, b, "name"))
-            .map(({ name }) => name)
-            .join(", ")}
-        </td>
-      )}
-      <td
-        style={{
-          display: "none",
-          position: "absolute",
-          opacity: 0,
-          pointerEvents: "none",
-        }}
-      >
-        <Image
-          src={urlFor(mainImage)
-            .format("png")
-            .quality(100)
-            .width(imageDimensions.width)
-            .height(imageDimensions.height)
-            .url()}
-          alt="project image"
-          width={imageDimensions.width}
-          height={imageDimensions.height}
-          quality={100}
-        />
-      </td>
+      <td className="other-work__hide-medium">{builtFor?.name ?? "—"}</td>
+      <td className="other-work__hide-small">{technologies?.map(({ name }) => name).join(", ")}</td>
       <td>
         <ul className="other-work__links">
-          {Object.keys(iconsMap).map((key) => {
-            const url = links?.[key as keyof LinksObject];
+          {projectLinks.map(({ key, label, icon }) => {
+            const href = links?.[key];
 
-            return (
-              <li
-                key={key}
-                className="other-work__link"
-                data-key={key}
-              >
-                {url && (
-                  <a
-                    aria-label="link"
-                    href={url}
-                    rel="noreferrer"
-                    className="other-work__icon-link shadow-link"
-                    target="_blank"
-                  >
-                    {iconsMap[key as keyof LinksObject]}
-                  </a>
-                )}
+            return href ? (
+              <li key={key} className="other-work__link">
+                <a
+                  aria-label={`${title} – ${label}`}
+                  href={href}
+                  rel="noreferrer"
+                  className="other-work__icon-link shadow-link"
+                  target="_blank"
+                >
+                  {icon}
+                </a>
               </li>
-            );
+            ) : null;
           })}
         </ul>
       </td>

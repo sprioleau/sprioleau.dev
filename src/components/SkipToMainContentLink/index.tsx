@@ -1,28 +1,13 @@
-"use client";
-
-import Link from "next/link";
 import icons from "../Icons";
-import { useRouter } from "next/navigation";
 
-type Props = {
-  route: string;
-};
-
-export default function SkipToMainContentLink({ route }: Props) {
-  const router = useRouter();
-
-  function handleSkipToMainContent() {
-    router.push(route);
-  }
-
+export default function SkipToMainContentLink() {
   return (
-    <Link
-      href={route}
+    <a
+      href="#main-content"
       className="skip-to-main-content"
-      onClick={handleSkipToMainContent}
     >
       <p className="skip-to-main-content__label">Skip to main content</p>
       {icons.arrowRight}
-    </Link>
+    </a>
   );
 }

@@ -1,29 +1,28 @@
-"use client";
-
-import useWindowSize, { breakpoints as bp } from "../../hooks/useWindowSize";
-
 import { composeClasses } from "../../utils";
 
 type Props = {
+  id?: string;
+  headingLevel: 1 | 2;
   sectionTitle: string;
   shouldCenter?: boolean;
 };
 
-const SectionHeader = ({ sectionTitle, shouldCenter = false }: Props) => {
-  const { windowSize } = useWindowSize();
-  const isSmallScreen = windowSize && windowSize <= bp.md;
-
+export default function SectionHeader({ id, headingLevel, sectionTitle, shouldCenter = false }: Props) {
+  const Heading = headingLevel === 1 ? "h1" : "h2";
   const sectionHeaderClasses = composeClasses({
     "section-header": true,
-    center: shouldCenter ?? isSmallScreen,
+    center: shouldCenter,
   });
 
   return (
     <header className={sectionHeaderClasses}>
-      <h2 className="section-header__title">{sectionTitle}</h2>
+      <Heading
+        id={id}
+        className="section-header__title"
+      >
+        {sectionTitle}
+      </Heading>
       <div className="section-header__accent-line" />
     </header>
   );
-};
-
-export default SectionHeader;
+}

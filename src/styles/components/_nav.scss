@@ -200,6 +200,7 @@
       transition-property: transform;
       position: fixed;
       opacity: 0;
+      visibility: hidden;
       flex-direction: column;
       justify-content: flex-start;
       right: 0;
@@ -215,6 +216,7 @@
       .nav-expanded & {
         --translateX: 0;
         opacity: 1;
+        visibility: visible;
       }
 
       & > :not(:last-child) {
@@ -248,6 +250,7 @@
 
       .nav-expanded & {
         pointer-events: none;
+        visibility: hidden;
       }
     }
 

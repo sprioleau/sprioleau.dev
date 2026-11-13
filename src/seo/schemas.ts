@@ -1,60 +1,22 @@
-/* eslint-disable import/prefer-default-export */
+import { homePage, portfolioOwner, SITE_URL } from "@/portfolio/routes";
 
-// TODO: Review to see what is needed
-
-export const logoSchema = {
+export const personSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  url: "https://www.sprioleau.dev",
-  logo: "https://www.sprioleau.dev/images/logo-seo.png",
+  "@type": "Person",
+  "@id": `${SITE_URL}/#person`,
+  name: portfolioOwner.name,
+  url: SITE_URL,
+  description: homePage.description,
+  jobTitle: portfolioOwner.jobTitle,
+  sameAs: [portfolioOwner.gitHubUrl, portfolioOwner.linkedInUrl],
 };
 
 export const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "S. Prioleau",
-  about:
-    "San'Quan Prioleau is a Staff Software Engineer with an eye for good design, who loves combining ideas to create new things.",
-  creator: {
-    "@type": "Person",
-    givenName: "San'Quan",
-    familyName: "Prioleau",
-  },
-};
-
-export const breadCrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "About",
-      item: "https://www.sprioleau.dev#about",
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Experience",
-      item: "https://www.sprioleau.dev#experience",
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
-      name: "Work",
-      item: "https://www.sprioleau.dev#work",
-    },
-    // {
-    //   "@type": "ListItem",
-    //   position: 4,
-    //   name: "Skills",
-    //   item: "https://www.sprioleau.dev#skills",
-    // },
-    {
-      "@type": "ListItem",
-      position: 5,
-      name: "Contact",
-      item: "https://www.sprioleau.dev#contact",
-    },
-  ],
+  "@id": `${SITE_URL}/#website`,
+  name: portfolioOwner.name,
+  url: SITE_URL,
+  description: homePage.description,
+  creator: { "@id": personSchema["@id"] },
 };

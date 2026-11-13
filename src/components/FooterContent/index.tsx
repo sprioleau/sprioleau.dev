@@ -1,36 +1,25 @@
 "use client";
 
-import { ClapButton, PortableTextBlock } from "@/components";
-import { formatNumber, getClaps } from "@/utils";
-
-import { ContributionsData } from "@/libs/github";
-import { FooterData } from "@/schemas/types";
-import icons from "../Icons";
+import type { ReactNode } from "react";
 import { useState } from "react";
+import formatNumber from "@/utils/formatNumber";
+import ClapButton from "../ClapButton";
+import icons from "../Icons";
 
 type Props = {
-  content: FooterData["body"];
-  contributions: ContributionsData["contributions"];
-  serverClapCount: NonNullable<Awaited<ReturnType<typeof getClaps>>["data"]>;
+  children: ReactNode;
+  contributions: number;
+  serverClapCount: number;
 };
 
-const FooterContent = ({ content, contributions, serverClapCount }: Props) => {
+export default function FooterContent({ children, contributions, serverClapCount }: Props) {
   const [clientClapCount, setClientClapCount] = useState(0);
+  const totalClaps = serverClapCount + clientClapCount;
 
-  const shouldDisplayStats = Object.values({ contributions }).some((stat) => stat > 0);
-
-  const statsData = [
-    {
-      key: "Page claps",
-      value: serverClapCount + clientClapCount,
-      icon: icons.clap,
-    },
-    {
-      key: "GitHub contributions in past year",
-      value: contributions,
-      icon: icons.commit,
-    },
-  ];
+  const stats = [
+    { label: "Page claps", value: totalClaps, icon: icons.clap },
+    { label: "GitHub contributions in past year", value: contributions, icon: icons.commit },
+  ].filter(({ value }) => value > 0);
 
   return (
     <>
@@ -39,37 +28,19 @@ const FooterContent = ({ content, contributions, serverClapCount }: Props) => {
         clientClapCount={clientClapCount}
         setClientClapCount={setClientClapCount}
       />
-      {content.map(({ _key, children, markDefs }) => (
-        <p
-          key={_key}
-          className="footer__message"
-        >
-          <PortableTextBlock
-            childrenContent={children}
-            markDefs={markDefs}
-            linksClass="shadow-link"
-          />
-        </p>
-      ))}
-      {shouldDisplayStats && (
+      {children}
+      {stats.length > 0 && (
         <ul className="footer__stats">
-          {statsData.map(({ key, value, icon }) =>
-            value > 0 ? (
-              <li
-                key={key}
-                className="footer__stat tooltip"
-                data-tooltip={key}
-              >
-                <p className="footer__stat-wrapper">
-                  <span>{formatNumber(value)}</span> <span className="icon">{icon}</span>
-                </p>
-              </li>
-            ) : null
-          )}
+          {stats.map(({ label, value, icon }) => (
+            <li key={label} className="footer__stat tooltip" data-tooltip={label}>
+              <p className="footer__stat-wrapper">
+                <span aria-label={`${formatNumber(value)} ${label.toLowerCase()}`}>{formatNumber(value)}</span>
+                <span className="icon" aria-hidden>{icon}</span>
+              </p>
+            </li>
+          ))}
         </ul>
       )}
     </>
   );
-};
-
-export default FooterContent;
+}

@@ -1,59 +1,28 @@
 "use client";
 
-import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
-
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./styles.module.scss";
 
 export default function Spotlight() {
-  const [isVisible, setIsVisible] = useState(false);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const spotlightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!window || !document) return;
+    const spotlight = spotlightRef.current;
+    if (!spotlight) return;
 
-    const smallScreenMedia = window?.matchMedia("(max-width: 600px)");
+    const pointerMedia = window.matchMedia("(min-width: 601px) and (hover: hover) and (pointer: fine)");
 
-    function getMousePosition({ currentTarget, clientX, clientY }: MouseEvent) {
-      if (!currentTarget) return;
+    function updatePosition({ clientX, clientY }: PointerEvent) {
+      if (!pointerMedia.matches || !spotlight) return;
 
-      const { left, top } = document.body.getBoundingClientRect();
-      mouseX.set(clientX - left);
-      mouseY.set(clientY - top);
-
-      if (smallScreenMedia.matches && isVisible) {
-        setIsVisible(false);
-        return;
-      }
-
-      if (!smallScreenMedia.matches && !isVisible) {
-        setIsVisible(true);
-        return;
-      }
+      spotlight.style.setProperty("--spotlight-x", `${clientX}px`);
+      spotlight.style.setProperty("--spotlight-y", `${clientY}px`);
+      spotlight.style.setProperty("--spotlight-opacity", "1");
     }
 
-    window.addEventListener("mousemove", getMousePosition);
+    window.addEventListener("pointermove", updatePosition, { passive: true });
+    return () => window.removeEventListener("pointermove", updatePosition);
+  }, []);
 
-    return () => {
-      window.removeEventListener("mousemove", getMousePosition);
-    };
-  }, [mouseX, mouseY, isVisible, setIsVisible]);
-
-  return (
-    <motion.div
-      className={styles.spotlight}
-      style={{
-        background: !isVisible
-          ? useMotionTemplate`none`
-          : useMotionTemplate`
-            radial-gradient(
-              300px circle at ${mouseX}px ${mouseY}px,
-              rgba(255, 196, 0, 0.25),
-              transparent 80%
-            )
-          `,
-      }}
-    />
-  );
+  return <div className={styles.spotlight} ref={spotlightRef} aria-hidden />;
 }

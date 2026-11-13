@@ -1,6 +1,8 @@
 @use "../utils/mixins";
 
 .selected-work {
+  display: flex;
+  flex-direction: column;
   &__works {
     display: flex;
     flex-direction: column;
@@ -35,14 +37,21 @@
     a {
       @include mixins.transition(all, 0.25s);
       filter: brightness(85%);
-      background-blend-mode: multiply;
       aspect-ratio: 16 / 9;
       width: 100%;
       margin: 0;
     }
 
-    .button {
+    a.button {
+      display: block;
       padding: 0;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
     }
 
     @include mixins.hover-wrapper {
@@ -54,10 +63,6 @@
 
   &__link {
     position: relative;
-
-    span {
-      opacity: 0;
-    }
 
     &::before {
       @include mixins.transition;
@@ -141,13 +146,8 @@
     }
   }
 
-  &__view-all-projects-link {
-    @include mixins.center;
-
-    &::before,
-    &::after {
-      display: none;
-    }
+  &__view-all-projects-link.button {
+    align-self: center;
   }
 }
 

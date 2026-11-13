@@ -1,10 +1,9 @@
 "use client";
 
-import { animate as animateImport, motion, useAnimate } from "framer-motion";
-import { composeClasses, toastMessage } from "@/utils";
-
+import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { useState } from "react";
+import composeClasses from "@/utils/composeClasses";
+import toastMessage from "@/utils/toastMessage";
 import Clap from "../Icons/Clap";
 
 type Props = {
@@ -15,144 +14,71 @@ type Props = {
 
 const MAX_CLAP_COUNT = 15;
 
-const ClapButton = ({ serverClapCount, clientClapCount, setClientClapCount }: Props) => {
-  const [scope, animate] = useAnimate();
+export default function ClapButton({ serverClapCount, clientClapCount, setClientClapCount }: Props) {
+  const countRef = useRef<HTMLDivElement>(null);
   const [hasSeenToast, setHasSeenToast] = useState(false);
-
-  const debouncedHandleClaps = useDebouncedCallback(async () => {
-    await fetch("/claps", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ newClapsTotal: serverClapCount + clientClapCount }),
-    });
+  const persistClaps = useDebouncedCallback(async (newClapsTotal: number) => {
+    try {
+      const response = await fetch("/claps", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ newClapsTotal }),
+        keepalive: true,
+      });
+      if (!response.ok) throw new Error("Could not save claps");
+    } catch {
+      toastMessage("Could not save your claps. Please try again.", "claps");
+    }
   }, 1500);
 
-  function decrementClaps() {
-    const newClapCount = clientClapCount - 1;
-    const countAnimationProps = getCountAnimationProps();
-    const fillAnimationProps = getFillAnimationProps(newClapCount / MAX_CLAP_COUNT);
+  function updateClapCount(event: React.MouseEvent<HTMLButtonElement>) {
+    const nextCount = clientClapCount + (event.altKey ? -1 : 1);
 
-    // Normalize both into guaranteed arrays
-    const fillArray = Array.isArray(fillAnimationProps) ? fillAnimationProps : [fillAnimationProps];
-    const countArray = Array.isArray(countAnimationProps) ? countAnimationProps : [countAnimationProps];
+    if (nextCount < 0 || nextCount > MAX_CLAP_COUNT) return;
 
-    // Safely spread them together
-    animate([...fillArray, ...countArray]);
-
-    setClientClapCount(newClapCount);
-    debouncedHandleClaps();
-  }
-
-  function incrementClaps() {
-    const newClapCount = clientClapCount + 1;
-
-    if (newClapCount === MAX_CLAP_COUNT && !hasSeenToast) {
+    if (nextCount === MAX_CLAP_COUNT && !hasSeenToast) {
       toastMessage("Thanks for the claps!");
       setHasSeenToast(true);
     }
 
-    const countAnimationProps = getCountAnimationProps();
-    const fillAnimationProps = getFillAnimationProps(newClapCount / MAX_CLAP_COUNT);
-
-    // Normalize both into guaranteed arrays
-    const fillArray = Array.isArray(fillAnimationProps) ? fillAnimationProps : [fillAnimationProps];
-    const countArray = Array.isArray(countAnimationProps) ? countAnimationProps : [countAnimationProps];
-
-    // Safely spread them together
-    animate([...fillArray, ...countArray]);
-
-    setClientClapCount(newClapCount);
-    debouncedHandleClaps();
-  }
-
-  function handleTouch(e: React.MouseEvent<HTMLButtonElement>) {
-    if (!e.altKey && clientClapCount >= MAX_CLAP_COUNT) {
-      if (hasSeenToast) return;
-      toastMessage("Thanks for the claps");
-      return;
+    const count = countRef.current;
+    if (count && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      count.getAnimations().forEach((animation) => animation.cancel());
+      count.animate(
+        [
+          { transform: "translate(-50%, 0) scale(0.05)", opacity: 0 },
+          { transform: "translate(-50%, -40px)", opacity: 1, offset: 0.55 },
+          { transform: "translate(-50%, -40px)", opacity: 1, offset: 0.8 },
+          { transform: "translate(-50%, -40px)", opacity: 0 },
+        ],
+        { duration: 850, easing: "ease-out" },
+      );
     }
 
-    if (e.altKey && clientClapCount === 0) return;
-
-    if (e.altKey && clientClapCount > 0) {
-      decrementClaps();
-      return;
-    }
-
-    incrementClaps();
-  }
-
-  function handleKeydown(e: React.KeyboardEvent<HTMLButtonElement>) {
-    if (![" ", "Enter"].includes(e.key)) return;
-
-    if (e.altKey) {
-      decrementClaps();
-      return;
-    }
-
-    incrementClaps();
+    setClientClapCount(nextCount);
+    persistClaps(serverClapCount + nextCount);
   }
 
   return (
-    <>
-      <div
-        className={composeClasses({
-          "clap-button": true,
-          pulse: clientClapCount < MAX_CLAP_COUNT,
-        })}
-      >
-        <div
-          ref={scope}
-          className="clap-button__wrapper"
+    <div className={composeClasses({ "clap-button": true, pulse: clientClapCount < MAX_CLAP_COUNT })}>
+      <div className="clap-button__wrapper">
+        <button
+          type="button"
+          className="clap-button__button clap no-frame"
+          aria-label="Clap for this site"
+          onClick={updateClapCount}
         >
-          <motion.button
-            className="clap-button__button clap no-frame"
-            onMouseDown={handleTouch}
-            onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => handleKeydown(e)}
-            whileHover={{
-              scale: 1.1,
-              transition: { type: "spring", duration: 0.2 },
-            }}
-            whileTap={{ scale: clientClapCount === MAX_CLAP_COUNT ? 0.9 : 1 }}
-          >
-            <Clap />
-            <div className="clap-button__fill" />
-          </motion.button>
-          <div className="clap-button__count">{clientClapCount}</div>
-        </div>
+          <Clap />
+          <span
+            className="clap-button__fill"
+            style={{ transform: `scaleY(${clientClapCount / MAX_CLAP_COUNT})` }}
+          />
+        </button>
+        <div className="clap-button__count" ref={countRef} aria-hidden>{clientClapCount}</div>
+        <span className="clap-button__status" aria-live="polite">
+          {clientClapCount > 0 ? `${clientClapCount} of ${MAX_CLAP_COUNT} claps added` : ""}
+        </span>
       </div>
-    </>
+    </div>
   );
-};
-
-type AnimationSequence = Parameters<typeof animateImport>[0];
-
-function getFillAnimationProps(fillPercentage: number): AnimationSequence {
-  return [
-    [
-      ".clap-button__fill",
-      { scaleY: fillPercentage.toFixed(2) },
-      { at: "<", type: "spring", stiffness: 100, mass: 0.7 },
-    ],
-  ];
 }
-
-function getCountAnimationProps(): AnimationSequence {
-  return [
-    [
-      ".clap-button__count",
-      {
-        y: [0, -40],
-        x: "-50%",
-        scale: [0.05, 1],
-        opacity: [0, 1],
-      },
-      { at: "<" },
-    ],
-    [".clap-button__count", { opacity: 0 }, { duration: 0.2, delay: 0.4 }],
-  ];
-}
-
-export default ClapButton;

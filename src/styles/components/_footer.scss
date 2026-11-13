@@ -41,6 +41,16 @@
     }
   }
 
+  &__privacy {
+    margin-bottom: 0;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+    }
+  }
+
   &__stats {
     @include mixins.center;
 

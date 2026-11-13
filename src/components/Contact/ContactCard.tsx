@@ -1,36 +1,28 @@
 "use client";
 
-import { ContactData } from "@/schemas/types";
-import { handleCopyEmailToClipboard } from "@/utils";
+import { type ContactData } from "@/schemas/types";
+import handleCopyEmailToClipboard from "@/utils/handleCopyEmailToClipboard";
 import icons from "../Icons";
 
-type Props = {
-  contact: ContactData;
-};
-
-const ContactCard = ({ contact: { email, overline } }: Props) => {
-  const getFormattedEmail = (email: string) => {
-    const [userName, serverDomain] = email.split("@");
-    return (
-      <>
-        <span>{userName}</span>
-        <span>{`@${serverDomain}`}</span>
-      </>
-    );
-  };
+export default function ContactCard({
+  contact: { email, overline },
+  headingLevel,
+}: { contact: ContactData; headingLevel: 2 | 3 }) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
+  const [userName, serverDomain] = email.split("@");
 
   return (
-    <div
+    <a
       className="contact__card"
-      role="button"
-      tabIndex={0}
-      onClick={() => handleCopyEmailToClipboard(email)}
+      href={`mailto:${email}`}
+      onClick={(event) => handleCopyEmailToClipboard(event, email)}
     >
-      <span className="icon mail-icon">{icons.email}</span>
-      <h3 className="contact__card-heading">{overline}</h3>
-      <p className="a contact__card-email">{getFormattedEmail(email)}</p>
-    </div>
+      <span className="icon mail-icon" aria-hidden>{icons.email}</span>
+      <Heading className="contact__card-heading">{overline}</Heading>
+      <p className="a contact__card-email">
+        <span>{userName}</span>
+        <span>@{serverDomain}</span>
+      </p>
+    </a>
   );
-};
-
-export default ContactCard;
+}

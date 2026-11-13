@@ -1,10 +1,11 @@
 import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const { newClapsTotal } = await request.json();
+  const body = await request.json().catch(() => null);
+  const newClapsTotal = body?.newClapsTotal;
 
-  if (!newClapsTotal) {
-    return new Response(JSON.stringify({ data: null, error: "Invalid request" }), {
+  if (!Number.isSafeInteger(newClapsTotal) || newClapsTotal < 0) {
+    return Response.json({ data: null, error: "Invalid clap total" }, {
       status: 400,
     });
   }
@@ -28,18 +29,20 @@ export async function POST(request: NextRequest) {
   };
 
   try {
-    const data = await fetch(
+    const response = await fetch(
       `https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items`,
       requestOptions
-    ).then((response) => response.json());
+    );
+    if (!response.ok) {
+      console.error("Edge Config rejected the clap update", response.status);
+      return Response.json({ data: null, error: "Could not save claps" }, { status: 502 });
+    }
 
-    return new Response(JSON.stringify({ data, error: null }), {
-      status: 200,
-    });
+    return Response.json({ data: await response.json(), error: null });
   } catch (caughtError) {
     console.error(caughtError);
 
-    return new Response(JSON.stringify({ data: null, error: "Internal server error" }), {
+    return Response.json({ data: null, error: "Internal server error" }, {
       status: 500,
     });
   }

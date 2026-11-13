@@ -3,10 +3,14 @@ export type ContributionsData = {
 };
 
 export async function fetchContributions(): Promise<ContributionsData> {
+  const accessToken = process.env.GITHUB_ACCESS_TOKEN;
+  if (!accessToken) return { contributions: 0 };
+
   const uri = "https://api.github.com/graphql";
 
   const date = new Date();
-  date.setFullYear(date.getFullYear() - 1);
+  date.setUTCHours(0, 0, 0, 0);
+  date.setUTCFullYear(date.getUTCFullYear() - 1);
   const dateISOString = date.toISOString();
 
   let data = null;
@@ -20,7 +24,7 @@ export async function fetchContributions(): Promise<ContributionsData> {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+        authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         query: `
@@ -43,7 +47,6 @@ export async function fetchContributions(): Promise<ContributionsData> {
   }
 
   if (data) {
-    // Contributions in the last year
     contributions = data.user.contributionsCollection.contributionCalendar.totalContributions;
   }
 

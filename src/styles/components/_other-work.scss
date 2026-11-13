@@ -24,6 +24,7 @@
   &__image {
     @include mixins.styled-border;
     position: fixed;
+    pointer-events: none;
     transform: rotate(-10deg);
     z-index: 50;
     outline: 1px solid var(--ui-accent-1);
@@ -73,5 +74,18 @@
     &:not(:last-child) {
       margin-right: 0.5rem;
     }
+  }
+}
+
+@include mixins.md {
+  .other-work__hide-medium {
+    display: none;
+  }
+}
+
+@include mixins.sm {
+  .other-work__hide-small,
+  .other-work__image {
+    display: none;
   }
 }
