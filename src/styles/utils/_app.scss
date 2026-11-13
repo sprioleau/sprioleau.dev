@@ -16,12 +16,16 @@
 }
 
 @include mixins.hover-wrapper {
-  *:focus {
+  :focus:not(:where(main.main, section.section)) {
     border-color: var(--ui-accent-1);
     outline: none;
     box-shadow: 0 0 0 var(--accent-line-width) rgba(var(--ui-accent-1-rgb), 0.8);
     color: var(--ui-text-hover);
   }
+}
+
+:where(main.main, section.section):focus {
+  outline: none;
 }
 
 ::selection {
