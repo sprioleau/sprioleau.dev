@@ -1,5 +1,10 @@
-User-Agent: *
+# Public portfolio. Search crawlers and AI agents may crawl the public pages,
+# Markdown versions, and agent index at https://www.sprioleau.dev/llms.txt.
+User-agent: *
 Allow: /
 Disallow: /private/
+Disallow: /claps$
+Disallow: /portfolio-markdown$
+Disallow: /portfolio-markdown/
 
 Sitemap: https://www.sprioleau.dev/sitemap.xml

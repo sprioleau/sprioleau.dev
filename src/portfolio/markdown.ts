@@ -184,7 +184,7 @@ export function renderLlmsIndex() {
     `# ${portfolioOwner.name}`,
     `> ${homePage.description}`,
     "## When to use this site",
-    "Use this portfolio to learn about San'Quan’s background, software engineering experience, projects, and professional contact information. Follow a Markdown link for a specific topic or read the complete portfolio in one file.",
+    "Use this portfolio when evaluating San’Quan Prioleau for software engineering roles or collaborations. Read Experience for roles, employers, dates, and work highlights. Read Selected Work and All Projects for examples, technologies, repositories, and live demos. Use Contact for the public email address and professional profiles.",
     "## Portfolio",
     portfolioPages
       .map(({ path, label, description }) => `- ${link(label, markdownPath(path))}: ${description}`)

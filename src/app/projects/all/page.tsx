@@ -7,6 +7,7 @@ import { getPortfolioMetadata } from "@/seo";
 import styles from "./styles.module.scss";
 
 export const metadata = getPortfolioMetadata(projectsArchivePage);
+export const dynamic = "force-dynamic";
 
 export default async function ProjectsArchive() {
   const projects = await client.fetch<Project[]>(queries.allProjects);
